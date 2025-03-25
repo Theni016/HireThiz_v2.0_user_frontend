@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  SafeAreaView,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import TripCard from "@/components/TripCard";
+import { LinearGradient } from "expo-linear-gradient";
 
 type Trip = {
   id: number;
@@ -31,7 +40,7 @@ const FindTrip = () => {
         }
 
         // Fetch all trips (not just specific to a driver)
-        const response = await axios.get("http://192.168.1.5:5000/api/trips", {
+        const response = await axios.get("http://192.168.1.2:5000/api/trips", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -48,44 +57,60 @@ const FindTrip = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Book a Trip</Text>
-      {loading ? (
-        <Text style={styles.loadingText}>Loading trips...</Text>
-      ) : trips.length > 0 ? (
-        <ScrollView>
-          {trips.map((trip) => (
-            <TripCard key={trip.id} trip={trip} />
-          ))}
-        </ScrollView>
-      ) : (
-        <Text style={styles.noTripsText}>No trips found</Text>
-      )}
-    </View>
+    <LinearGradient
+      colors={["#3E0E12", "#1E0406"]}
+      style={styles.gradientBackground}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <Text style={styles.title}>Book a Trip</Text>
+
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="#ffffff"
+            style={styles.loader}
+          />
+        ) : trips.length > 0 ? (
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            {trips.map((trip) => (
+              <TripCard key={trip.id} trip={trip} />
+            ))}
+          </ScrollView>
+        ) : (
+          <Text style={styles.noTripsText}>No trips found.</Text>
+        )}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  gradientBackground: {
+    flex: 1,
+  },
+  safeArea: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#fff",
   },
   title: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 10,
-  },
-  loadingText: {
-    fontSize: 16,
+    color: "#ffffff",
+    marginBottom: 20,
     textAlign: "center",
     marginTop: 20,
+  },
+  loader: {
+    marginTop: 40,
+  },
+  scrollContainer: {
+    paddingBottom: 20,
   },
   noTripsText: {
-    fontSize: 16,
+    fontSize: 18,
     textAlign: "center",
-    marginTop: 20,
-    color: "gray",
+    marginTop: 40,
+    color: "#ffffff",
   },
 });
 
