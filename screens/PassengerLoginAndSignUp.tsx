@@ -53,7 +53,7 @@ const PassengerLoginAndSignUp = () => {
     }
     try {
       const response = await axios.post(
-        "http://192.168.1.2:5000/api/passenger/signup",
+        "http://192.168.8.140:5000/api/passenger/signup",
         {
           email,
           password,
@@ -73,7 +73,7 @@ const PassengerLoginAndSignUp = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.2:5000/api/passenger/login",
+        "http://192.168.8.140:5000/api/passenger/login",
         {
           email,
           password,
@@ -84,7 +84,7 @@ const PassengerLoginAndSignUp = () => {
 
       // Fetch user details after login
       const profileResponse = await axios.get(
-        "http://192.168.1.2:5000/api/passenger/profile",
+        "http://192.168.8.140:5000/api/passenger/profile",
         {
           headers: { Authorization: response.data.token },
         }

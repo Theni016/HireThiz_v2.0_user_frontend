@@ -38,13 +38,19 @@ const FindTrip = () => {
           Alert.alert("Error", "User not authenticated");
           return;
         }
+        const response = await axios.get(
+          "http://192.168.8.140:5000/api/trips",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-        // Fetch all trips (not just specific to a driver)
-        const response = await axios.get("http://192.168.1.2:5000/api/trips", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const formattedTrips = response.data.map((trip: any) => ({
+          ...trip,
+          id: trip._id, // Ensure id is set properly
+        }));
 
-        setTrips(response.data);
+        setTrips(formattedTrips);
       } catch (error) {
         console.error("Fetch trips error:", error);
         Alert.alert("Error", "Failed to load trips");
@@ -73,7 +79,7 @@ const FindTrip = () => {
         ) : trips.length > 0 ? (
           <ScrollView contentContainerStyle={styles.scrollContainer}>
             {trips.map((trip) => (
-              <TripCard key={trip.id} trip={trip} />
+              <TripCard key={String(trip.id)} trip={trip} />
             ))}
           </ScrollView>
         ) : (
