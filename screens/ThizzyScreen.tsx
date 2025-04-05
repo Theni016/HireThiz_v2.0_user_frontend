@@ -52,12 +52,15 @@ const ThizzyScreen = () => {
       );
 
       if (response.data.length > 0) {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: response.data[0].text,
-          sender: "bot",
-        };
-        setMessages((prev) => [...prev, botMessage]);
+        const botMessages: Message[] = response.data.map(
+          (res: any, index: number) => ({
+            id: `${Date.now() + index}`,
+            text: res.text,
+            sender: "bot",
+          })
+        );
+
+        setMessages((prev) => [...prev, ...botMessages]);
       }
     } catch (error) {
       console.error("Chatbot error:", error);
@@ -295,6 +298,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#fff",
+    marginBottom: 20,
   },
   backButtonText: {
     color: "#fff",
