@@ -31,7 +31,6 @@ interface TripCardProps {
 
 const TripCard: React.FC<TripCardProps> = ({ trip }) => {
   const { user } = useAuth();
-  console.log("User:", user); // Debugging log
   const [modalVisible, setModalVisible] = useState(false);
   const [seats, setSeats] = useState("1");
   const [confirmModal, setConfirmModal] = useState(false);

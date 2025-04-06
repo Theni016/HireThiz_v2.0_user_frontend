@@ -14,9 +14,9 @@ import TripCard from "@/components/TripCard";
 import { LinearGradient } from "expo-linear-gradient";
 
 type Trip = {
-  id: number;
-  startLocation: string;
-  destination: string;
+  id: string;
+  startLocation: { latitude: number; longitude: number; address: string };
+  destination: { latitude: number; longitude: number; address: string };
   seatsAvailable: number;
   pricePerSeat: number;
   date: string;
