@@ -66,6 +66,8 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
 
   const handleFinalBooking = async () => {
     try {
+      const totalAmount = parseInt(seats) * trip.pricePerSeat;
+
       const payload = {
         tripId: trip.id,
         userId: user?._id,
@@ -73,6 +75,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
         email: user?.email,
         phone: user?.phoneNumber,
         seatsBooked: parseInt(seats),
+        totalAmount,
       };
 
       console.log("Booking Payload:", payload); // Log payload before sending
