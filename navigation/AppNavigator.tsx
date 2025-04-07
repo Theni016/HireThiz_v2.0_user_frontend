@@ -14,6 +14,7 @@ import PassengerMenu from "@/screens/PassengerMenu";
 import PassengerProfile from "@/screens/PassengerProfile";
 import ThizzyScreen from "@/screens/ThizzyScreen";
 import FindTrip from "@/screens/FindTrip";
+import BookedTrip from "@/screens/BookedTrip";
 import { RootStackParamList } from "@/screens/types";
 
 // Define stack navigator
@@ -94,6 +95,7 @@ const AppNavigator = () => {
         />
         <Stack.Screen name="PassengerMenu" component={PassengerMenu} />
         <Stack.Screen name="PassengerProfile" component={PassengerProfile} />
+        <Stack.Screen name="BookedTrip" component={BookedTrip} />
         <Stack.Screen name="ThizzyScreen" component={ThizzyScreen} />
         <Stack.Screen name="FindTrip" component={FindTrip} />
       </Stack.Navigator>

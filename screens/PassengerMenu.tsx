@@ -26,6 +26,7 @@ type RootStackParamList = {
   PassengerProfile: undefined;
   ThizzyScreen: undefined;
   FindTrip: undefined;
+  BookedTrip: undefined;
 };
 
 const { width } = Dimensions.get("window");
@@ -107,6 +108,24 @@ const PassengerMenu = () => {
           >
             <Image source={ChatIcon} style={styles.icon} resizeMode="contain" />
             <Text style={styles.tileText}>Chat with Thizzy</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        {/* My Trips */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          style={styles.tileWrapper}
+          onPress={() => navigation.navigate("BookedTrip")}
+        >
+          <LinearGradient
+            colors={["#43e97b", "#38f9d7"]} // Green gradient
+            style={styles.tile}
+          >
+            <Image
+              source={FindTripIcon} // Or a separate icon if available
+              style={styles.icon}
+              resizeMode="contain"
+            />
+            <Text style={styles.tileText}>My Trips</Text>
           </LinearGradient>
         </TouchableOpacity>
 

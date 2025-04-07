@@ -5,4 +5,5 @@ export type RootStackParamList = {
   PassengerProfile: undefined;
   ThizzyScreen: undefined;
   FindTrip: undefined;
+  BookedTrip: undefined;
 };
