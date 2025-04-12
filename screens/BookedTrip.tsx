@@ -1,28 +1,43 @@
 // screens/BookedTrip.tsx
 import React, { useEffect, useState } from "react";
-import { ScrollView, View, Text, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  SafeAreaView,
+  Alert,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import BookedTripCard from "../components/BookedTripCard";
+import { LinearGradient } from "expo-linear-gradient";
 
 const BookedTrip = () => {
   const [bookedTrips, setBookedTrips] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        console.log("JWT Token:", token);
+        if (!token) {
+          Alert.alert("Error", "User not authenticated");
+          return;
+        }
         const res = await axios.get(
           "http://192.168.8.140:5000/api/booked-trips",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log("Fetched Booked Trips:", res.data);
         setBookedTrips(res.data);
       } catch (err) {
         console.log("Error fetching booked trips:", err);
+        Alert.alert("Error", "Failed to load booked trips");
+      } finally {
+        setLoading(false);
       }
     };
     fetchBookings();
@@ -37,25 +52,38 @@ const BookedTrip = () => {
   };
 
   return (
-    <ScrollView>
-      {bookedTrips.length === 0 ? (
-        <Text style={{ padding: 20, textAlign: "center" }}>
-          No bookings yet.
-        </Text>
-      ) : (
-        bookedTrips.map(({ trip, booking }: any) => (
-          <BookedTripCard
-            key={booking._id}
-            trip={trip}
-            booking={booking}
-            onRateDriver={() => handleRate(booking._id)}
-            onReportDriver={() => handleReport(booking._id)}
-            hasRated={booking.hasRated || false}
-            hasReported={booking.hasReported || false}
+    <LinearGradient
+      colors={["#3E0E12", "#1E0406"]}
+      style={styles.gradientBackground}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <Text style={styles.title}>My Booked Trips</Text>
+
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="#ffffff"
+            style={styles.loader}
           />
-        ))
-      )}
-    </ScrollView>
+        ) : bookedTrips.length === 0 ? (
+          <Text style={styles.noTripsText}>No bookings yet.</Text>
+        ) : (
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            {bookedTrips.map(({ trip, booking }: any) => (
+              <BookedTripCard
+                key={booking._id}
+                trip={trip}
+                booking={booking}
+                onRateDriver={() => handleRate(booking._id)}
+                onReportDriver={() => handleReport(booking._id)}
+                hasRated={booking.hasRated || false}
+                hasReported={booking.hasReported || false}
+              />
+            ))}
+          </ScrollView>
+        )}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 

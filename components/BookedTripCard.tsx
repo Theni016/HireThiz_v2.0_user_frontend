@@ -1,116 +1,184 @@
 // components/BookedTripCard.tsx
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
-const getStatusStyle = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "completed":
-      return styles.completed;
-    case "cancelled":
-      return styles.cancelled;
-    case "ongoing":
-      return styles.ongoing;
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "In Progress":
+      return "#FFA500";
+    case "Completed":
+      return "#32CD32";
+    case "Cancelled":
+      return "#FF4747";
+    case "Available":
+      return "#1E90FF";
     default:
-      return {};
+      return "#ccc";
   }
 };
 
-interface BookedTripCardProps {
-  trip: any;
-  booking: any;
-  onRateDriver: () => void;
-  onReportDriver: () => void;
-  hasRated: boolean;
-  hasReported: boolean;
-}
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
 
-const BookedTripCard: React.FC<BookedTripCardProps> = ({
+const extractDistrict = (address: string): string => {
+  const parts = address.split(",").map((part) => part.trim());
+  return parts[parts.length - 2] || parts[0];
+};
+
+const BookedTripCard = ({
   trip,
   booking,
   onRateDriver,
   onReportDriver,
   hasRated,
   hasReported,
-}) => {
+}: any) => {
+  const statusColor = getStatusColor(trip.status);
+
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>{trip.driverName}</Text>
-      <Text>Vehicle: {trip.vehicle}</Text>
-      <Text>From: {trip.startLocation.address}</Text>
-      <Text>To: {trip.destination.address}</Text>
-      <Text>Date: {new Date(trip.date).toLocaleDateString()}</Text>
-      <Text>Seats Booked: {booking.seatsBooked}</Text>
-      <Text>Total Amount: Rs. {booking.totalAmount}</Text>
-      <Text>
-        Status:{" "}
-        <Text style={[styles.status, getStatusStyle(trip.status)]}>
-          {" "}
-          {trip.status}
+    <View style={styles.cardWrapper}>
+      <LinearGradient colors={["#000428", "#004e92"]} style={styles.card}>
+        <Text style={styles.tripTitle}>
+          {extractDistrict(trip.startLocation.address)} →{" "}
+          {extractDistrict(trip.destination.address)}
         </Text>
-      </Text>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          disabled={hasReported}
-          onPress={onReportDriver}
-          style={[styles.button, hasReported && styles.disabledButton]}
-        >
-          <Text style={styles.buttonText}>
-            {hasReported ? "Reported" : "Report Driver"}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>Date:</Text>
+          <Text style={styles.value}>{formatDate(trip.date)}</Text>
+        </View>
 
-        <TouchableOpacity
-          disabled={hasRated}
-          onPress={onRateDriver}
-          style={[styles.button, hasRated && styles.disabledButton]}
-        >
-          <Text style={styles.buttonText}>
-            {hasRated ? "Rated" : "Rate Driver"}
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>Seats Booked:</Text>
+          <Text style={styles.value}>{booking.seatsBooked}</Text>
+        </View>
+
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>Total Paid:</Text>
+          <Text style={styles.value}>Rs. {booking.totalAmount}</Text>
+        </View>
+
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>Driver:</Text>
+          <Text style={styles.value}>{trip.driverName}</Text>
+        </View>
+
+        <View style={styles.statusTag}>
+          <Text style={[styles.statusText, { backgroundColor: statusColor }]}>
+            {trip.status}
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+
+        <View style={styles.buttonRow}>
+          <LinearGradient
+            colors={["#ff6f61", "#d72638"]}
+            style={styles.gradientButton}
+          >
+            <TouchableOpacity
+              onPress={onRateDriver}
+              style={styles.innerButton}
+              disabled={hasRated}
+            >
+              <Text style={styles.buttonText}>
+                {hasRated ? "Rated" : "Rate Driver"}
+              </Text>
+            </TouchableOpacity>
+          </LinearGradient>
+
+          <LinearGradient
+            colors={["#ff6f61", "#d72638"]}
+            style={styles.gradientButton}
+          >
+            <TouchableOpacity
+              onPress={onReportDriver}
+              style={styles.innerButton}
+              disabled={hasReported}
+            >
+              <Text style={styles.buttonText}>
+                {hasReported ? "Reported" : "Report Driver"}
+              </Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
+      </LinearGradient>
     </View>
   );
 };
 
+export default BookedTripCard;
+
 const styles = StyleSheet.create({
+  cardWrapper: {
+    marginBottom: 20,
+  },
   card: {
-    backgroundColor: "#fff",
-    padding: 18,
-    marginVertical: 10,
+    borderRadius: 20,
+    padding: 20,
     marginHorizontal: 16,
-    borderRadius: 12,
-    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
   },
-  title: {
-    fontSize: 18,
+  tripTitle: {
+    fontSize: 22,
+    color: "#ffffff",
     fontWeight: "bold",
+    marginBottom: 10,
   },
-  status: {
-    fontWeight: "bold",
-  },
-  completed: { color: "green" },
-  cancelled: { color: "red" },
-  ongoing: { color: "orange" },
-  buttonContainer: {
+  infoRow: {
     flexDirection: "row",
-    marginTop: 10,
     justifyContent: "space-between",
+    marginVertical: 4,
   },
-  button: {
-    backgroundColor: "#004e92",
-    padding: 10,
-    borderRadius: 10,
+  label: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  value: {
+    color: "#ffffff",
+    fontSize: 16,
+  },
+  statusTag: {
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  statusText: {
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    color: "#fff",
+    fontWeight: "bold",
+    overflow: "hidden",
+    fontSize: 14,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  gradientButton: {
+    borderRadius: 30,
     width: "48%",
+  },
+  innerButton: {
+    paddingVertical: 12,
+    alignItems: "center",
+    borderRadius: 30,
   },
   buttonText: {
     color: "#fff",
-    textAlign: "center",
-  },
-  disabledButton: {
-    backgroundColor: "gray",
+    fontSize: 14,
+    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
 });
-
-export default BookedTripCard;
