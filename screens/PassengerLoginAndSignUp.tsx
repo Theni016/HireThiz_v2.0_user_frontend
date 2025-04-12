@@ -80,20 +80,22 @@ const PassengerLoginAndSignUp = () => {
         }
       );
 
-      await AsyncStorage.setItem("token", response.data.token); // Store token
+      const token = `Bearer ${response.data.token}`;
+      await AsyncStorage.setItem("token", response.data.token); // Store token properly
 
-      // Fetch user details after login
+      // Fetch user details after login using correct token format
       const profileResponse = await axios.get(
         "http://192.168.8.140:5000/api/passenger/profile",
         {
-          headers: { Authorization: response.data.token },
+          headers: { Authorization: token },
         }
       );
 
       await AsyncStorage.setItem("user", JSON.stringify(profileResponse.data)); // Store user details
 
       navigation.navigate("PassengerMenu");
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Login error:", error.response?.data || error.message);
       Alert.alert("Error", "Invalid credentials");
     }
   };

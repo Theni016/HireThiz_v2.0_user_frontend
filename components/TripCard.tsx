@@ -11,6 +11,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import { useAuth } from "../navigation/AppNavigator";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Trip = {
   id: string;
@@ -70,19 +71,24 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
 
       const payload = {
         tripId: trip.id,
-        userId: user?._id,
-        username: user?.username,
-        email: user?.email,
-        phone: user?.phoneNumber,
         seatsBooked: parseInt(seats),
         totalAmount,
       };
 
+      const token = await AsyncStorage.getItem("token");
+      console.log("Token:", token);
       console.log("Booking Payload:", payload); // Log payload before sending
+
+      if (!token) {
+        console.error("Token not found in AsyncStorage");
+      }
 
       const response = await axios.post(
         "http://192.168.8.140:5000/api/book-trip",
-        payload
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       console.log("Booking Response:", response.data); // Log API response

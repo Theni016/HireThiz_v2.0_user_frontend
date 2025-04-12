@@ -41,7 +41,7 @@ const FindTrip = () => {
         const response = await axios.get(
           "http://192.168.8.140:5000/api/trips",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}` }, // ✅ Correct format
           }
         );
 
