@@ -12,6 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import { useAuth } from "../navigation/AppNavigator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SuccessPopup from "./SuccessPopup";
 
 type Trip = {
   id: string;
@@ -35,6 +36,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [seats, setSeats] = useState("1");
   const [confirmModal, setConfirmModal] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const extractDistrict = (address: string): string => {
@@ -95,7 +97,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
 
       if (response.data.success) {
         setConfirmModal(false);
-        Alert.alert("Booking Successful", "Your trip has been booked!");
+        setShowSuccessPopup(true);
       } else {
         Alert.alert("Booking Failed", response.data.message);
       }
@@ -205,6 +207,11 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
           </View>
         </View>
       </Modal>
+      <SuccessPopup
+        visible={showSuccessPopup}
+        onClose={() => setShowSuccessPopup(false)}
+        message="Trip Booking Successful!"
+      />
     </View>
   );
 };
