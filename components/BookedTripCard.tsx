@@ -1,5 +1,5 @@
 // components/BookedTripCard.tsx
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -40,7 +40,13 @@ const BookedTripCard = ({
   hasRated,
   hasReported,
 }: any) => {
+  const [rated, setRated] = useState<boolean>(hasRated);
+
   const statusColor = getStatusColor(trip.status);
+
+  const handleRate = () => {
+    onRateDriver(() => setRated(true));
+  };
 
   return (
     <View style={styles.cardWrapper}>
@@ -82,12 +88,12 @@ const BookedTripCard = ({
             style={styles.gradientButton}
           >
             <TouchableOpacity
-              onPress={onRateDriver}
+              onPress={handleRate}
               style={styles.innerButton}
-              disabled={hasRated}
+              disabled={rated}
             >
               <Text style={styles.buttonText}>
-                {hasRated ? "Rated" : "Rate Driver"}
+                {rated ? "Rated" : "Rate Driver"}
               </Text>
             </TouchableOpacity>
           </LinearGradient>

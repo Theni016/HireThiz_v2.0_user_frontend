@@ -13,10 +13,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import BookedTripCard from "../components/BookedTripCard";
 import { LinearGradient } from "expo-linear-gradient";
+import RatingPopup from "../components/RatingPopup";
 
 const BookedTrip = () => {
   const [bookedTrips, setBookedTrips] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isRatingVisible, setIsRatingVisible] = useState(false);
+  const [selectedTripId, setSelectedTripId] = useState<string | null>(null);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -43,8 +49,44 @@ const BookedTrip = () => {
     fetchBookings();
   }, []);
 
+  const submitRating = async (stars: number) => {
+    if (!selectedBookingId) return;
+    try {
+      const token = await AsyncStorage.getItem("token");
+      await axios.post(
+        "http://192.168.8.140:5000/api/rate-driver",
+        {
+          bookingId: selectedBookingId,
+          rating: stars,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Update local state to disable the button
+      setBookedTrips((prevTrips: any) =>
+        prevTrips.map((entry: any) =>
+          entry.booking._id === selectedBookingId
+            ? {
+                ...entry,
+                booking: { ...entry.booking, hasRated: true },
+              }
+            : entry
+        )
+      );
+
+      Alert.alert("Success", "Thank you for your feedback!");
+    } catch (error) {
+      console.error("Rating error:", error);
+      Alert.alert("Error", "Failed to submit rating.");
+    } finally {
+      setIsRatingVisible(false);
+      setSelectedBookingId(null);
+    }
+  };
+
   const handleRate = (bookingId: string) => {
-    // Send rating API, then disable button
+    setSelectedBookingId(bookingId);
+    setIsRatingVisible(true);
   };
 
   const handleReport = (bookingId: string) => {
@@ -74,7 +116,7 @@ const BookedTrip = () => {
                 key={booking._id}
                 trip={trip}
                 booking={booking}
-                onRateDriver={() => handleRate(booking._id)}
+                onRateDriver={() => handleRate(trip._id)}
                 onReportDriver={() => handleReport(booking._id)}
                 hasRated={booking.hasRated || false}
                 hasReported={booking.hasReported || false}
@@ -82,6 +124,11 @@ const BookedTrip = () => {
             ))}
           </ScrollView>
         )}
+        <RatingPopup
+          visible={isRatingVisible}
+          onClose={() => setIsRatingVisible(false)}
+          onSubmit={submitRating}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
