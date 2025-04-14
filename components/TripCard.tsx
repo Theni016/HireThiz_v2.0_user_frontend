@@ -156,26 +156,42 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
       {/* Seat Selection Modal */}
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Select Seats</Text>
+          <View style={styles.popup}>
+            <Text style={styles.popupTitle}>Select Seats</Text>
             <TextInput
               style={styles.input}
               keyboardType="numeric"
               value={seats}
               onChangeText={setSeats}
+              placeholder="Enter number of seats"
+              placeholderTextColor="#ccc"
             />
-            <View style={styles.modalButtonContainer}>
+            <View style={styles.popupButtonContainer}>
               <TouchableOpacity
-                style={styles.modalButton}
+                style={styles.buttonWrapper}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.buttonText}>Cancel</Text>
+                <LinearGradient
+                  colors={["#ff6f61", "#d72638"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientButton}
+                >
+                  <Text style={styles.gradientButtonText}>Cancel</Text>
+                </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.modalButton}
+                style={styles.buttonWrapper}
                 onPress={handleConfirmSeats}
               >
-                <Text style={styles.buttonText}>Confirm</Text>
+                <LinearGradient
+                  colors={["#ff6f61", "#d72638"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientButton}
+                >
+                  <Text style={styles.gradientButtonText}>Confirm</Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           </View>
@@ -185,23 +201,39 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
       {/* Booking Confirmation Modal */}
       <Modal visible={confirmModal} transparent animationType="slide">
         <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Confirm Booking</Text>
-            <Text>Trip: {trip.destination.address}</Text>
-            <Text>Seats: {seats}</Text>
-            <Text>Total Price: Rs. {totalPrice}</Text>
-            <View style={styles.modalButtonContainer}>
+          <View style={styles.popup}>
+            <Text style={styles.popupTitle}>Confirm Booking</Text>
+            <Text style={styles.popupText}>
+              Trip: {trip.destination.address}
+            </Text>
+            <Text style={styles.popupText}>Seats: {seats}</Text>
+            <Text style={styles.popupText}>Total Price: Rs. {totalPrice}</Text>
+            <View style={styles.popupButtonContainer}>
               <TouchableOpacity
-                style={styles.modalButton}
+                style={styles.buttonWrapper}
                 onPress={() => setConfirmModal(false)}
               >
-                <Text style={styles.buttonText}>Back</Text>
+                <LinearGradient
+                  colors={["#ff6f61", "#d72638"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientButton}
+                >
+                  <Text style={styles.gradientButtonText}>Back</Text>
+                </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.modalButton}
+                style={styles.buttonWrapper}
                 onPress={handleFinalBooking}
               >
-                <Text style={styles.buttonText}>Confirm Booking</Text>
+                <LinearGradient
+                  colors={["#ff6f61", "#d72638"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientButton}
+                >
+                  <Text style={styles.gradientButtonText}>Confirm Booking</Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           </View>
@@ -269,14 +301,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    width: "100%",
-    marginBottom: 10,
-  },
+
   modalButtonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -289,5 +314,70 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     width: "45%",
+  },
+  popup: {
+    width: 320,
+    padding: 25,
+    backgroundColor: "#570c2a",
+    borderRadius: 20,
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8.3,
+    elevation: 13,
+  },
+  popupTitle: {
+    fontSize: 20,
+    color: "#fff",
+    marginBottom: 15,
+    fontFamily: "Poppins-Bold",
+    textAlign: "center",
+  },
+  popupText: {
+    fontSize: 16,
+    color: "#fff",
+    marginBottom: 8,
+    textAlign: "center",
+    fontFamily: "Poppins-Regular",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
+    width: "100%",
+    marginBottom: 15,
+    color: "#fff",
+    backgroundColor: "#3c0d1c",
+    fontFamily: "Poppins-Regular",
+  },
+  popupButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    gap: 10,
+  },
+  buttonWrapper: {
+    flex: 1,
+  },
+  gradientButton: {
+    paddingVertical: 12,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8.3,
+    elevation: 13,
+  },
+  gradientButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: "Poppins-Bold",
+    textAlign: "center",
   },
 });

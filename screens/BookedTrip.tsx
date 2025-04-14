@@ -24,28 +24,29 @@ const BookedTrip = () => {
     null
   );
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (!token) {
-          Alert.alert("Error", "User not authenticated");
-          return;
-        }
-        const res = await axios.get(
-          "http://192.168.8.140:5000/api/booked-trips",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setBookedTrips(res.data);
-      } catch (err) {
-        console.log("Error fetching booked trips:", err);
-        Alert.alert("Error", "Failed to load booked trips");
-      } finally {
-        setLoading(false);
+  const fetchBookings = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        Alert.alert("Error", "User not authenticated");
+        return;
       }
-    };
+      const res = await axios.get(
+        "http://192.168.8.140:5000/api/booked-trips",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setBookedTrips(res.data);
+    } catch (err) {
+      console.log("Error fetching booked trips:", err);
+      Alert.alert("Error", "Failed to load booked trips");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBookings();
   }, []);
 
@@ -85,6 +86,10 @@ const BookedTrip = () => {
   };
 
   const handleRate = (bookingId: string) => {
+    const alreadyRated = bookedTrips.find(
+      (entry: any) => entry.booking._id === bookingId && entry.booking.hasRated
+    );
+    if (alreadyRated) return;
     setSelectedBookingId(bookingId);
     setIsRatingVisible(true);
   };

@@ -40,13 +40,13 @@ const BookedTripCard = ({
   hasRated,
   hasReported,
 }: any) => {
-  const [rated, setRated] = useState<boolean>(hasRated);
+  // const [rated, setRated] = useState<boolean>(hasRated);
 
   const statusColor = getStatusColor(trip.status);
 
-  const handleRate = () => {
-    onRateDriver(() => setRated(true));
-  };
+  // const handleRate = () => {
+  //   onRateDriver(() => setRated(true));
+  // };
 
   return (
     <View style={styles.cardWrapper}>
@@ -88,12 +88,12 @@ const BookedTripCard = ({
             style={styles.gradientButton}
           >
             <TouchableOpacity
-              onPress={handleRate}
-              style={styles.innerButton}
-              disabled={rated}
+              onPress={onRateDriver}
+              style={[styles.innerButton, hasRated && { opacity: 0.6 }]}
+              disabled={hasRated}
             >
               <Text style={styles.buttonText}>
-                {rated ? "Rated" : "Rate Driver"}
+                {hasRated ? "Rated" : "Rate Driver"}
               </Text>
             </TouchableOpacity>
           </LinearGradient>
