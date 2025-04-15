@@ -49,71 +49,69 @@ const BookedTripCard = ({
   // };
 
   return (
-    <View style={styles.cardWrapper}>
-      <LinearGradient colors={["#000428", "#004e92"]} style={styles.card}>
-        <Text style={styles.tripTitle}>
-          {extractDistrict(trip.startLocation.address)} →{" "}
-          {extractDistrict(trip.destination.address)}
+    <View style={styles.card}>
+      <Text style={styles.tripTitle}>
+        {extractDistrict(trip.startLocation.address)} →{" "}
+        {extractDistrict(trip.destination.address)}
+      </Text>
+
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Date:</Text>
+        <Text style={styles.value}>{formatDate(trip.date)}</Text>
+      </View>
+
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Seats Booked:</Text>
+        <Text style={styles.value}>{booking.seatsBooked}</Text>
+      </View>
+
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Total Paid:</Text>
+        <Text style={styles.value}>Rs. {booking.totalAmount}</Text>
+      </View>
+
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Driver:</Text>
+        <Text style={styles.value}>{trip.driverName}</Text>
+      </View>
+
+      <View style={styles.statusContainer}>
+        <Text style={[styles.statusText, { backgroundColor: statusColor }]}>
+          {trip.status}
         </Text>
+      </View>
 
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Date:</Text>
-          <Text style={styles.value}>{formatDate(trip.date)}</Text>
-        </View>
-
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Seats Booked:</Text>
-          <Text style={styles.value}>{booking.seatsBooked}</Text>
-        </View>
-
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Total Paid:</Text>
-          <Text style={styles.value}>Rs. {booking.totalAmount}</Text>
-        </View>
-
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Driver:</Text>
-          <Text style={styles.value}>{trip.driverName}</Text>
-        </View>
-
-        <View style={styles.statusTag}>
-          <Text style={[styles.statusText, { backgroundColor: statusColor }]}>
-            {trip.status}
-          </Text>
-        </View>
-
-        <View style={styles.buttonRow}>
-          <LinearGradient
-            colors={["#ff6f61", "#d72638"]}
-            style={styles.gradientButton}
+      <View style={styles.buttonRow}>
+        <LinearGradient
+          colors={["#ff6f61", "#d72638"]}
+          style={styles.gradientButton}
+        >
+          <TouchableOpacity
+            onPress={onRateDriver}
+            style={[styles.innerButton, hasRated && { opacity: 0.6 }]}
+            disabled={hasRated}
           >
-            <TouchableOpacity
-              onPress={onRateDriver}
-              style={[styles.innerButton, hasRated && { opacity: 0.6 }]}
-              disabled={hasRated}
-            >
-              <Text style={styles.buttonText}>
-                {hasRated ? "Rated" : "Rate Driver"}
-              </Text>
-            </TouchableOpacity>
-          </LinearGradient>
+            <Text style={styles.buttonText}>
+              {hasRated ? "Rated" : "Rate Driver"}
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
 
-          <LinearGradient
-            colors={["#ff6f61", "#d72638"]}
-            style={styles.gradientButton}
+        <LinearGradient
+          colors={["#ff6f61", "#d72638"]}
+          style={styles.gradientButton}
+        >
+          <TouchableOpacity
+            onPress={onReportDriver}
+            style={[styles.innerButton, hasReported && { opacity: 0.6 }]}
+            disabled={hasReported}
           >
-            <TouchableOpacity
-              onPress={onReportDriver}
-              style={styles.innerButton}
-              disabled={hasReported}
-            >
-              <Text style={styles.buttonText}>
-                {hasReported ? "Reported" : "Report Driver"}
-              </Text>
-            </TouchableOpacity>
-          </LinearGradient>
-        </View>
-      </LinearGradient>
+            <Text style={styles.buttonText}>
+              {hasReported ? "Reported" : "Report Driver"}
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -121,60 +119,66 @@ const BookedTripCard = ({
 export default BookedTripCard;
 
 const styles = StyleSheet.create({
-  cardWrapper: {
-    marginBottom: 20,
-  },
   card: {
+    marginBottom: 20,
     borderRadius: 20,
+    backgroundColor: "rgba(0,0,0,0.5)",
     padding: 20,
-    marginHorizontal: 16,
+    borderWidth: 2,
+    borderColor: "#ffffff",
     shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   tripTitle: {
     fontSize: 22,
     color: "#ffffff",
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 12,
+    fontFamily: "Poppins-Bold",
   },
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 4,
+    marginVertical: 6,
   },
   label: {
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "600",
+    fontFamily: "Poppins-Regular",
   },
   value: {
     color: "#ffffff",
     fontSize: 16,
+    fontFamily: "Poppins-Regular",
   },
-  statusTag: {
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 15,
+  statusContainer: {
+    alignItems: "flex-end",
+    marginTop: 12,
+    marginBottom: 18,
   },
+
   statusText: {
     paddingVertical: 6,
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
     borderRadius: 20,
     color: "#fff",
     fontWeight: "bold",
-    overflow: "hidden",
     fontSize: 14,
+    overflow: "hidden",
+    fontFamily: "Poppins-Bold",
   },
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 10,
+    marginTop: 8,
   },
   gradientButton: {
-    borderRadius: 30,
     width: "48%",
+    borderRadius: 30,
   },
   innerButton: {
     paddingVertical: 12,

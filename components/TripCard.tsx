@@ -108,50 +108,58 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
   };
 
   return (
-    <View style={styles.cardWrapper}>
-      <LinearGradient colors={["#000428", "#004e92"]} style={styles.card}>
-        <Text style={styles.tripTitle}>
-          {startDistrict} → {destinationDistrict}
-        </Text>
+    <View style={styles.card}>
+      <Text style={styles.tripTitle}>
+        {startDistrict} → {destinationDistrict}
+      </Text>
 
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Seats:</Text>
-          <Text style={styles.value}>{trip.seatsAvailable}</Text>
-        </View>
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Seats:</Text>
+        <Text style={styles.value}>{trip.seatsAvailable}</Text>
+      </View>
 
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Price/Seat:</Text>
-          <Text style={styles.value}>Rs. {trip.pricePerSeat}</Text>
-        </View>
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Price/Seat:</Text>
+        <Text style={styles.value}>Rs. {trip.pricePerSeat}</Text>
+      </View>
 
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Date:</Text>
-          <Text style={styles.value}>{formattedDate}</Text>
-        </View>
+      <View style={styles.infoRow}>
+        <Text style={styles.label}>Date:</Text>
+        <Text style={styles.value}>{formattedDate}</Text>
+      </View>
 
-        <Text style={styles.description}>{trip.description}</Text>
+      <Text style={styles.description}>{trip.description}</Text>
 
-        <View style={styles.divider} />
+      <View style={styles.divider} />
 
-        <Text style={styles.driver}>
-          Driver: {trip.driverName} | {trip.vehicle} | ⭐ {trip.rating}
-        </Text>
+      <Text style={styles.driver}>
+        Driver: {trip.driverName} | {trip.vehicle} | ⭐ {trip.rating}
+      </Text>
 
-        <View style={styles.buttonContainer}>
+      <View style={styles.buttonRow}>
+        <LinearGradient
+          colors={["#ff6f61", "#d72638"]}
+          style={styles.gradientButton}
+        >
           <TouchableOpacity
-            style={styles.button}
+            style={styles.innerButton}
             onPress={() =>
               Alert.alert("More Info", "Trip details will be shown.")
             }
           >
             <Text style={styles.buttonText}>More Info</Text>
           </TouchableOpacity>
+        </LinearGradient>
 
-          <TouchableOpacity style={styles.button} onPress={handleBookNow}>
+        <LinearGradient
+          colors={["#4CAF50", "#388E3C"]}
+          style={styles.gradientButton}
+        >
+          <TouchableOpacity style={styles.innerButton} onPress={handleBookNow}>
             <Text style={styles.buttonText}>Book Now</Text>
           </TouchableOpacity>
-        </View>
-      </LinearGradient>
+        </LinearGradient>
+      </View>
 
       {/* Seat Selection Modal */}
       <Modal visible={modalVisible} transparent animationType="slide">
@@ -175,7 +183,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
                   colors={["#ff6f61", "#d72638"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  style={styles.gradientButton}
+                  style={styles.gradientButtonSeat}
                 >
                   <Text style={styles.gradientButtonText}>Cancel</Text>
                 </LinearGradient>
@@ -188,7 +196,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
                   colors={["#ff6f61", "#d72638"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  style={styles.gradientButton}
+                  style={styles.gradientButtonSeat}
                 >
                   <Text style={styles.gradientButtonText}>Confirm</Text>
                 </LinearGradient>
@@ -203,11 +211,28 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
         <View style={styles.modalContainer}>
           <View style={styles.popup}>
             <Text style={styles.popupTitle}>Confirm Booking</Text>
-            <Text style={styles.popupText}>
-              Trip: {trip.destination.address}
-            </Text>
-            <Text style={styles.popupText}>Seats: {seats}</Text>
-            <Text style={styles.popupText}>Total Price: Rs. {totalPrice}</Text>
+            <View style={styles.popupInfoContainer}>
+              <View style={styles.popupInfoRow}>
+                <Text style={styles.popupLabel}>Start:</Text>
+                <Text style={styles.popupValue}>
+                  {trip.startLocation.address}
+                </Text>
+              </View>
+              <View style={styles.popupInfoRow}>
+                <Text style={styles.popupLabel}>Destination:</Text>
+                <Text style={styles.popupValue}>
+                  {trip.destination.address}
+                </Text>
+              </View>
+              <View style={styles.popupInfoRow}>
+                <Text style={styles.popupLabel}>Seats:</Text>
+                <Text style={styles.popupValue}>{seats}</Text>
+              </View>
+              <View style={styles.popupInfoRow}>
+                <Text style={styles.popupLabel}>Total Price:</Text>
+                <Text style={styles.popupValue}>Rs. {totalPrice}</Text>
+              </View>
+            </View>
             <View style={styles.popupButtonContainer}>
               <TouchableOpacity
                 style={styles.buttonWrapper}
@@ -217,7 +242,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
                   colors={["#ff6f61", "#d72638"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  style={styles.gradientButton}
+                  style={styles.gradientButtonSeat}
                 >
                   <Text style={styles.gradientButtonText}>Back</Text>
                 </LinearGradient>
@@ -230,7 +255,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
                   colors={["#ff6f61", "#d72638"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  style={styles.gradientButton}
+                  style={styles.gradientButtonSeat}
                 >
                   <Text style={styles.gradientButtonText}>Confirm Booking</Text>
                 </LinearGradient>
@@ -251,8 +276,19 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
 export default TripCard;
 
 const styles = StyleSheet.create({
-  cardWrapper: { marginBottom: 20 },
-  card: { borderRadius: 20, padding: 20, elevation: 5 },
+  card: {
+    marginBottom: 20,
+    borderRadius: 20,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    padding: 20,
+    borderWidth: 2,
+    borderColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8.3,
+    elevation: 13,
+  },
   tripTitle: {
     fontSize: 22,
     color: "#ffffff",
@@ -277,7 +313,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 10,
+    marginTop: 15,
   },
   button: {
     padding: 10,
@@ -286,34 +322,22 @@ const styles = StyleSheet.create({
     width: "48%",
     alignItems: "center",
   },
-  buttonText: { color: "#ffffff", fontSize: 16, fontWeight: "bold" },
+  buttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 15,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalView: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-    alignItems: "center",
-  },
-  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
-
-  modalButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginTop: 10,
-  },
-  modalButton: {
-    padding: 10,
-    backgroundColor: "#ff6f61",
-    borderRadius: 30,
-    alignItems: "center",
-    width: "45%",
   },
   popup: {
     width: 320,
@@ -330,18 +354,35 @@ const styles = StyleSheet.create({
     elevation: 13,
   },
   popupTitle: {
-    fontSize: 20,
+    fontSize: 25,
     color: "#fff",
+    fontWeight: "bold",
     marginBottom: 15,
     fontFamily: "Poppins-Bold",
     textAlign: "center",
   },
-  popupText: {
+  popupInfoContainer: {
+    width: "100%",
+    marginBottom: 15,
+  },
+
+  popupInfoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 4,
+  },
+  popupLabel: {
     fontSize: 16,
     color: "#fff",
-    marginBottom: 8,
-    textAlign: "center",
+    fontFamily: "Poppins-SemiBold",
+  },
+  popupValue: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
     fontFamily: "Poppins-Regular",
+    textAlign: "right",
+    maxWidth: "60%",
   },
   input: {
     borderWidth: 1,
@@ -364,6 +405,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   gradientButton: {
+    borderRadius: 30,
+    width: "48%",
+  },
+  gradientButtonSeat: {
     paddingVertical: 12,
     borderRadius: 30,
     borderWidth: 2,
@@ -373,6 +418,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8.3,
     elevation: 13,
+  },
+  innerButton: {
+    paddingVertical: 12,
+    alignItems: "center",
+    borderRadius: 30,
   },
   gradientButtonText: {
     color: "white",
